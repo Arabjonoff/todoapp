@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:todoapp/src/ui/onboarding/onboarding_animate_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todoapp/src/ui/auth/register/register_screen.dart';
+import 'package:todoapp/src/ui/main/main_screen.dart';
 
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String user = preferences.getString('username')??'';
+  runApp( MyApp(user: user,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String user;
+  const MyApp({super.key, required this.user});
 
   // This widget is the root of your application.
   @override
@@ -30,7 +36,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child:  OnBoardingAnimateScreen()
+      child:  user.isNotEmpty?MainScreen():RegisterScreen()
     );
   }
 }
