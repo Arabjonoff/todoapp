@@ -1,18 +1,18 @@
-import 'package:sqflite/sqflite.dart';
-// ignore: depend_on_referenced_packages
+import 'package:sqflite/sqflite.dart' as dataBase;
 import 'package:path/path.dart';
+import 'package:todoapp/src/model/task_model.dart';
 
-class DataBaseHelper{
+class DataBaseHelper {
   static final DataBaseHelper _dataBaseHelper =
-  DataBaseHelper.internal();
+  DataBaseHelper._init();
 
   factory DataBaseHelper() => _dataBaseHelper;
-  static Database? _db;
+  static dataBase.Database? _db;
 
-  DataBaseHelper.internal();
+  DataBaseHelper._init();
 
-
-  Future<Database> get db async {
+  /// Database yartilganmi yoki yartalimaganmi?
+  Future<dataBase.Database> get AsosiyDB async {
     if (_db != null) {
       return _db!;
     }
@@ -20,47 +20,55 @@ class DataBaseHelper{
 
     return _db!;
   }
+
+  /// Yangi baza ochadi
   _initDb() async {
-    String dataBasePath = await getDatabasesPath();
+    /// Bazani yo'lni oladi
+    String dataBasePath = await dataBase.getDatabasesPath();
     String path = join(dataBasePath, 'todo');
-    var db = openDatabase(path, version: 1, onCreate: _onCreate);
+    print(dataBasePath);
+    var db = dataBase.openDatabase(path, version: 1, onCreate: _onCreate);
     return db;
   }
-  void _onCreate(Database db, int version) async {
+
+  void _onCreate(dataBase.Database db, int version) async {
     await db.execute('CREATE TABLE myTodo('
-        'text TEXT PRIMARY KEY,'
-        'id INTEGER PRIMARY KEY,'
-        'description TEXT'
+        'title TEXT,'
+        'desc TEXT,'
+        'date TEXT,'
+        'endTime TEXT,'
+        'startTime TEXT,'
+        'priority INTEGER'
         ')');
   }
 
 
-  Future<int> saveTodo() async {
-    var dbClient = await db;
+  Future<int> saveTodo(TaskModel task) async {
+    var dbClient = await AsosiyDB;
     var result = await dbClient.insert(
-      'myTodo',
-      {
-        "text":"QALE",
-        "id":"1",
-        "description":"YAXSHI",
-
-      },
-
+      'myTodo', task.toJson(),
     );
-    print("Sql Result: $result");
+    print(result);
     return result;
   }
 
-  Future<List> getDatabase() async {
-    var dbClient = await db;
+  Future<List<TaskModel>> getDatabase() async {
+    var dbClient = await AsosiyDB;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM myTodo');
-    List data = [];
-    for(int i =0; i < list.length;i++){
-      data.add(list[i]);
+    List<TaskModel> data = <TaskModel>[];
+    for (int i = 0; i < list.length; i++) {
+      TaskModel taskModel = TaskModel(
+        title: list[i]['title'],
+        desc: list[i]['desc'],
+        date: list[i]['date'],
+        startTime: list[i]['startTime'],
+        endTime: list[i]['endTime'],
+        priority: list[i]['priority'],
+      );
+      data.add(taskModel);
     }
-    print(data);
     return data;
   }
 
-
 }
+
