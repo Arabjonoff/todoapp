@@ -5,13 +5,15 @@ import 'package:todoapp/src/theme/app_color/app_color.dart';
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final String hinText;
-  final bool obscureText;
+  final bool obscureText, enable;
 
   const TextFieldWidget(
       {super.key,
       required this.controller,
       required this.hinText,
-      required this.obscureText});
+      required this.obscureText,
+        this.enable = true,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,8 @@ class TextFieldWidget extends StatelessWidget {
           border: Border.all(color: AppColor.grey)),
       height: 48.h,
       child: TextField(
+        style: TextStyle(color: Colors.white),
+        enabled: enable,
         decoration: InputDecoration(
             border: InputBorder.none,
           hintText: hinText,
