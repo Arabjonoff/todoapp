@@ -13,7 +13,7 @@ class BottomDialog{
      return Container(
        color: AppColor.card,
        width: MediaQuery.of(context).size.width,
-       height: 228.h,
+       height: 408.h,
        child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
@@ -24,6 +24,15 @@ class BottomDialog{
            TextFieldWidget(controller: TextEditingController(), hinText: "Enter Task", obscureText: false),
            SizedBox(height: 8.h,),
            TextFieldWidget(controller: TextEditingController(), hinText: "Description", obscureText: false),
+           SizedBox(height: 8.h,),
+           TextFieldWidget(controller: TextEditingController(), hinText: "Date", obscureText: false),
+           SizedBox(height: 8.h,),
+           Row(
+             children: [
+               Expanded(child: TextFieldWidget(controller: TextEditingController(), hinText: "Start time", obscureText: false)),
+               Expanded(child: TextFieldWidget(controller: TextEditingController(), hinText: "End time", obscureText: false)),
+             ],
+           )
            // Padding(
            //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
            //   child: Row(
