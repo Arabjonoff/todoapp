@@ -32,7 +32,9 @@ class DataBaseHelper {
   }
 
   void _onCreate(dataBase.Database db, int version) async {
-    await db.execute('CREATE TABLE myTodo('
+    await db.execute(
+        'CREATE TABLE myTodo('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
         'title TEXT,'
         'desc TEXT,'
         'date TEXT,'
@@ -69,6 +71,20 @@ class DataBaseHelper {
     }
     return data;
   }
+
+  Future<int> updateBase(TaskModel item)async{
+    var dbClient = await AsosiyDB;
+    var result = dbClient.update('myTodo', item.toJson(),
+    where: 'id=?',
+    whereArgs: [item.id]);
+    return result;
+  }
+  Future<int>deleteBase(TaskModel item)async{
+    var dbClient = await AsosiyDB;
+    var result = dbClient.delete('myTodo',where: 'id=?',whereArgs: [item.id]);
+    return result;
+  }
+
 
 }
 
